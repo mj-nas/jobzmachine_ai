@@ -25,14 +25,14 @@ async def get_all_resumes(limit: int = Query(5, description="Number of resumes t
     """
     client = get_weaviate_client()
     print(limit)
-    collection = client.collections.get("Resume")
-    client.close()
+    collection = client.collections.get("Resume2")
     response = collection.query.fetch_objects(
         limit= limit
     )
+    client.close()
     if not response:
         return {"message": "No resumes found."}
-    print(response)
+    # print(response)
     # results = response.get("data", {}).get("Get", {})
     return {"results": response}
 
