@@ -98,7 +98,7 @@ def upload_large_json_to_weaviate(json_path: str, batch_size: int, collection_na
                 print("All objects uploaded successfully.")
             # Close the batch to ensure all objects are sent
 
-            client.close()
+            # client.close()
 
             print(f"🎉 Finished uploading. Success: {total - failed}, Failed: {failed}")
     

@@ -33,7 +33,9 @@ async def upload_from_json(request: UploadRequest):
     
     try:
         upload_large_json_to_weaviate(request.json_path, request.batch_size, request.collection_name)
+        
         return {"message": "Resumes uploaded successfully from JSON"}
+    
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
     

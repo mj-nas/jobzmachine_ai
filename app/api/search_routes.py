@@ -11,6 +11,12 @@ class JDSchema(BaseModel):
     text: str
     collection_name: str   # Default collection name
 
+
+class HybridJDSchema(BaseModel):
+    text: str
+    collection_name: str   # Default collection name
+    keyword: str 
+
 @router.get("/")
 async def root():
     return {"message": "Welcome to the Resume Search API!"}
@@ -47,6 +53,25 @@ async def search_resumes(body: JDSchema, limit: int = Query(..., description="Se
 
     response = collection.query.near_vector(
         near_vector=embedding,
+        limit=limit,
+        return_metadata=MetadataQuery(distance=True)
+    )
+    client.close()
+    return {"query": body.text, "results": response}
+
+
+@router.post("/searchhybrid/")
+async def search_hybrid_resumes(body: HybridJDSchema, limit: int = Query(..., description="Search query")):
+    embedding = generate_embedding(body.text)
+    client = get_weaviate_client()
+    collection = client.collections.get(body.collection_name)
+    if not collection:
+        return {"error": "Collection not found."}
+
+    response = collection.query.hybrid(
+        query= body.keyword,
+        vector=embedding,
+        alpha=0.75,
         limit=limit,
         return_metadata=MetadataQuery(distance=True)
     )
