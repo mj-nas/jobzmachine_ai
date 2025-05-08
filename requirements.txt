@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+weaviate-client
+sentence-transformers
+dotenv
+tqdm
