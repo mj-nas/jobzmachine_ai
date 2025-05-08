@@ -9,6 +9,7 @@ router = APIRouter()
 
 class JDSchema(BaseModel):
     text: str
+    collection_name: str   # Default collection name
 
 @router.get("/")
 async def root():
@@ -40,7 +41,9 @@ async def get_all_resumes(limit: int = Query(5, description="Number of resumes t
 async def search_resumes(body: JDSchema, limit: int = Query(..., description="Search query")):
     embedding = generate_embedding(body.text)
     client = get_weaviate_client()
-    collection = client.collections.get("Resume2")
+    collection = client.collections.get(body.collection_name)
+    if not collection:
+        return {"error": "Collection not found."}
 
     response = collection.query.near_vector(
         near_vector=embedding,

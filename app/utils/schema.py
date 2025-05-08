@@ -1,20 +1,20 @@
-import weaviate.classes.config as wc
+from weaviate.classes.config import Configure, Property, DataType
 
-def create_resume_schema(client):
+def create_resume_schema(client, collection_name):
     try:
-        if "Resume2" not in client.collections.list_all():
+        if collection_name not in client.collections.list_all():
             client.collections.create(
-                name="Resume2",
+                collection_name,
                 properties=[
-                    wc.Property(name="file_id", data_type=wc.DataType.TEXT),
-                    wc.Property(name="file_date", data_type=wc.DataType.DATE),
-                    wc.Property(name="email", data_type=wc.DataType.TEXT),
-                    wc.Property(name="title", data_type=wc.DataType.TEXT),
+                    Property(name="file_id", data_type=DataType.TEXT),
+                    Property(name="file_date", data_type=DataType.DATE),
+                    Property(name="email", data_type=DataType.TEXT),
+                    Property(name="title", data_type=DataType.TEXT),
                 ],
-                vectorizer_config=wc.Configure.Vectorizer.none(),
+                vectorizer_config=Configure.Vectorizer.none(),
             )
-            print("✅ 'Resume2' schema created using `collections` format.")
+            print("✅ {collection_name} schema created using `collections` format.")
         else:
-            print("ℹ️ 'Resume2' schema already exists.")
+            print("ℹ️ {collection_name} schema already exists.")
     except Exception as e:
         print(f"❌ Failed to create Resume schema: {e}")

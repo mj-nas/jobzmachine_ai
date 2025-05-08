@@ -3,7 +3,6 @@ from contextlib import asynccontextmanager
 from app.api.upload_routes import router as upload_router
 from app.api.search_routes import router as search_router
 from app.utils.weaviate import get_weaviate_client
-from app.utils.schema import create_resume_schema
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -11,7 +10,6 @@ from fastapi.middleware.cors import CORSMiddleware
 async def lifespan(app: FastAPI):
     # Initialize Weaviate client and schema on startup
     client = get_weaviate_client()
-    create_resume_schema(client)
     app.state.weaviate = client
     
     yield
