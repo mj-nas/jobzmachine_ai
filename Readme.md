@@ -6,8 +6,8 @@ This project implements a semantic resume search system using **FastAPI** as the
 
 ## 🛠 Features
 
-- Resume ingestion and vectorization using OpenAI embeddings
-- Semantic search API over 25,000+ resumes
+- Resume ingestion and vectorization using Opensource Models
+- Semantic search API over 100,000+ resumes
 - FastAPI backend with modular structure
 - Vector DB powered by Weaviate (running locally in Docker)
 
