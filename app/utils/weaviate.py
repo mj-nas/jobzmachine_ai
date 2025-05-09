@@ -20,3 +20,17 @@ def get_weaviate_client() -> weaviate.Client:
         print(f"❌ Exception during Weaviate client initialization: {e}")
         raise e
 
+def delete_weviate_collection(collection_name: str) -> None:
+    """Delete a Weaviate collection."""
+    client = get_weaviate_client()
+    print(f"Deleting collection '{collection_name}'...")
+    
+    try:
+        print(client.collections.list_all(simple=True).keys())
+        response = client.collections.delete(collection_name)
+        print(f"✅ Collection '{collection_name}' deleted successfully")
+    except Exception as e:
+        print(f"❌ Failed to delete collection '{collection_name}': {e}")
+    
+    client.close()
+    return response

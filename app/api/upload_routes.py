@@ -4,6 +4,8 @@ import os
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 from app.utils.upload import  upload_large_json_to_weaviate
+from app.utils.weaviate import delete_weviate_collection
+
 
 router = APIRouter()
 
@@ -11,6 +13,9 @@ class UploadRequest(BaseModel):
     json_path: str  # Local path to your JSON file
     collection_name: str  # Name of the Weaviate collection
     batch_size: int   # Default batch size for uploading
+
+class DeleteCollectionRequest(BaseModel):
+    collection_name: str  # Name of the Weaviate collection to delete
 
 @router.get("/")
 async def root():
@@ -39,3 +44,15 @@ async def upload_from_json(request: UploadRequest):
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
     
+
+@router.post("/delete_collection")
+async def delete_collection(request: DeleteCollectionRequest):
+    """Delete a Weaviate collection."""
+    
+    try:
+        response = delete_weviate_collection(request.collection_name)
+        print (response)
+        return {"message": f"Collection '{request.collection_name}' deleted successfully"}
+    
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
