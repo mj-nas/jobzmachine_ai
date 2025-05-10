@@ -10,7 +10,6 @@ from tqdm import tqdm
 # Load the GPU-accelerated model
 model = SentenceTransformer("BAAI/bge-large-en-v1.5")
 
-client = get_weaviate_client()
 print("device for model>>>>>>>>>>>>>>>>>>>>", model.device)  
 
 
@@ -32,6 +31,9 @@ def upload_large_json_to_weaviate_with_gpu(json_path: str, batch_size: int, coll
     path = Path(json_path)
     if not path.exists() or not path.suffix == ".json":
         raise ValueError("Invalid JSON file path provided.")
+    
+    client = get_weaviate_client()
+
     
     if not client.collections.exists(collection_name):
         print(f"Collection '{collection_name}' does not exist. Creating it now.")
@@ -129,8 +131,13 @@ def upload_large_json_to_weaviate_with_gpu(json_path: str, batch_size: int, coll
 
             print(f"✅ Finished uploading. Success: {total - failed}, Failed: {failed}")
 
+    client.close()
+    # Close the client connection
+
 def search_with_gpu(query: str, collection_name: str, limit: int):
     """Search for similar resumes using GPU-accelerated embeddings."""
+
+    client = get_weaviate_client()
     collection = client.collections.get(collection_name)
     if not collection:
         return {"error": "Collection not found."}
