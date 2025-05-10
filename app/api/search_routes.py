@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from weaviate.classes.query import MetadataQuery
 from app.utils.embedding_model import generate_embedding
 from app.utils.weaviate import get_weaviate_client
+from app.utils.upload_with_gpu import search_with_gpu
 from app.utils.schema import create_resume_schema
 
 router = APIRouter()
@@ -57,6 +58,20 @@ async def search_resumes(body: JDSchema, limit: int = Query(..., description="Se
         return_metadata=MetadataQuery(distance=True)
     )
     client.close()
+    return {"query": body.text, "results": response}
+
+@router.post("/searchvector_with_gpu/")
+async def search_resumes_with_gpu(body: JDSchema, limit: int = Query(..., description="Search query")):
+    
+    if not body.collection_name:
+        return {"error": "Collection name is required."}
+    if not body.text:
+        return {"error": "Search query is required."}
+    response = search_with_gpu(
+        query=body.text,
+        collection_name=body.collection_name,
+        limit=limit
+    )
     return {"query": body.text, "results": response}
 
 

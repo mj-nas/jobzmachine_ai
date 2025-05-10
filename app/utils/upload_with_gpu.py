@@ -1,4 +1,5 @@
 from sentence_transformers import SentenceTransformer
+from weaviate.classes.query import MetadataQuery
 from datetime import datetime
 from pathlib import Path
 from app.utils.weaviate import get_weaviate_client
@@ -127,3 +128,22 @@ def upload_large_json_to_weaviate_with_gpu(json_path: str, batch_size: int, coll
                 print("🎉 All objects uploaded successfully.")
 
             print(f"✅ Finished uploading. Success: {total - failed}, Failed: {failed}")
+
+def search_with_gpu(query: str, collection_name: str, limit: int):
+    """Search for similar resumes using GPU-accelerated embeddings."""
+    collection = client.collections.get(collection_name)
+    if not collection:
+        return {"error": "Collection not found."}
+    
+    # Generate the query embedding
+    query_embedding = generate_embeddings([query])[0]
+    
+
+    response = collection.query.near_vector(
+        near_vector=query_embedding,
+        limit=limit,
+        return_metadata=MetadataQuery(distance=True)
+    )
+    client.close()
+    
+    return response
