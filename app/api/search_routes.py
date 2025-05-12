@@ -92,3 +92,5 @@ async def search_hybrid_resumes(body: HybridJDSchema, limit: int = Query(..., de
     )
     client.close()
     return {"query": body.text, "results": response}
+
+

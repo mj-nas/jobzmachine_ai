@@ -48,6 +48,9 @@ def upload_large_json_to_weaviate(json_path: str, batch_size: int, collection_na
             for item in resumes:
                         try:
                             title = item.get("title", [])
+                            file_path = item.get("file_path", [])
+                            if not file_path:
+                                raise ValueError("No file path provided for the resume.")
                             print(f"Processing title: {title}")
                             text_for_embedding = item.get("content", [])
                             email = item.get("email") or None
@@ -61,6 +64,7 @@ def upload_large_json_to_weaviate(json_path: str, batch_size: int, collection_na
                             
                             properties={
                                       "file_id": item.get("id"),
+                                      "file_path": file_path[0],
                                       "file_date": item.get("file_date", str(datetime.now())),
                                       "email": email,
                                       "title": title[0],

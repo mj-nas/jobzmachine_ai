@@ -13,7 +13,7 @@ services:
     - 8080:8080
     - 50051:50051
     volumes:
-    - weaviate_data:/var/lib/weaviate
+    - weaviate_data2:/var/lib/weaviate
     restart: on-failure:0
     environment:
       QUERY_DEFAULTS_LIMIT: 25
@@ -22,4 +22,4 @@ services:
       ENABLE_API_BASED_MODULES: 'true'
       CLUSTER_HOSTNAME: 'node1'
 volumes:
-  weaviate_data:
+  weaviate_data2:
