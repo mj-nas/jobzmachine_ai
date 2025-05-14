@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.api.upload_routes import router as upload_router
 from app.api.search_routes import router as search_router
+from app.api.evaluation_routes import router as evaluation_router
 from app.utils.weaviate import get_weaviate_client
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -34,6 +35,7 @@ app.add_middleware(
 # Include the routes for uploading and searching
 app.include_router(upload_router, prefix="/upload", tags=["upload"])
 app.include_router(search_router, prefix="/search", tags=["search"])
+app.include_router(evaluation_router, prefix="/evaluation", tags=["evaluation"])
 
 # Root endpoint (optional)
 @app.get("/")
